@@ -54,7 +54,7 @@
 
                 					</select>
                 					<div class="input-group-addon">
-                						<span class="fa fa-plus"></span>
+                						<span class="fa fa-plus" id="add-more-program" data-toggle="modal" data-target="#myModal"></span>
                 					</div>
                 				</div>
                 			</div>
@@ -203,15 +203,21 @@
 			});
 		});
         //==================================================
-        $('#add-more-academic').on('click',function(){
-            $('#myModal').modal();
-        })
+        //$('#add-more-academic').on('click',function(){
+          //  $('#myModal').modal();
+       // })
         //==================================================
-        
-        $('.btn-save-academic').on('click',function(){
-            var academic = $('#academic_year').val();
-            alert(academic);
+        $(document).ready(function(){
+            $('.btn-save-academic').on('click',function(e){
+                e.preventDefault();
+                var academic = $('#academic_year').val();
+                alert(academic);
+                $('#myModal').modal('hide');
+            });
         });
+        $('#add-more-program').on('click', function(){
+            $('#myModal').modal()
+        })
         
 
 
