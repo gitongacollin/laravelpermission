@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', '| Create New Post')
-
 @section('content')
+
+@include('courses.popup.academic')
 
 
 
@@ -39,7 +39,7 @@
 
                 					</select>
                 					<div class="input-group-addon">
-                						<span class="fa fa-plus"></span>
+                						<span class="fa fa-plus" id="add-more-academic" data-toggle="modal" data-target="#myModal"></span>
                 					</div>
                 				</div>
                 			</div>
@@ -185,6 +185,7 @@
 
 
 @section('script')
+    <script src="{{ asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js') }}"></script>
 	<script type="text/javascript">
 		$(function (){
 			$('#start_date').datetimepicker({
@@ -201,6 +202,25 @@
 				format: 'mm/dd/yyyy',
 			});
 		});
+        //==================================================
+        $('#add-more-academic').on('click',function(){
+            $('#myModal').modal();
+        })
+        //==================================================
+        
+        $('.btn-save-academic').on('click',function(){
+            var academic = $('#academic_year').val();
+            alert(academic);
+        });
+        
+
+
+        //var myEl = document.getElementById('btn-save-academic');
+
+        //myEl.addEventListener('click', function() {
+    //alert('Hello world');
+      //  }, false);
+
 	</script>
 
 @endsection
