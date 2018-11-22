@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Course;
+use App\Program;
 use Auth;
 use Session;
+use App\Academic;
+use App\Level;
+use App\Shift;
+use App\Time;
 
 class CourseController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware(['auth', 'isAdmin']); 
+        $this->middleware('web'); 
     }
 
     
@@ -22,9 +26,12 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getManageCourse()
     {
-        return view('courses.manageCourse');
+        $programs = Program::all();
+        $shift =Shift::all();
+        $academics = Academic::orderBy('academic_id','DESC')->get();
+        return view('courses.manageCourse',compact('programs','academics','shift'));
     }
 
     /**
@@ -32,9 +39,12 @@ class CourseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function postInsertAcademic(Request $request)
     {
-        //
+        if ($request->ajax())
+        {
+            return response(Academic::create($request->all()));
+        }
     }
 
     /**
@@ -43,9 +53,20 @@ class CourseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function postInsertProgram(Request $request)
     {
-        //
+        if ($request->ajax())
+        {
+            return response(Program::create($request->all()));
+        }
+    }
+    public function postInsertLevel(Request $request)
+    {
+        if($request->ajax())
+        {
+            return response(Level::create($request->all()));
+
+        }
     }
 
     /**
@@ -54,9 +75,12 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showLevel(Request $request)
     {
-        //
+        if($request->ajax())
+        {
+            return response(Level::where('program_id',$request->program_id)->get());
+        }
     }
 
     /**
@@ -65,9 +89,12 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function createShift(Request $request)
     {
-        //
+        if($request->ajax())
+        {
+            return(Shift::create($request->all()));
+        }
     }
 
     /**
@@ -77,9 +104,12 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function createTime(Request $request)
     {
-        //
+        if($request->ajax())
+        {
+            return(Time::create($request->all()));
+        }
     }
 
     /**

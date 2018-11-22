@@ -1,46 +1,55 @@
 @extends('layouts.app')
 
-@section('title', '| Add Role')
 
 @section('content')
-
-
-<section class="content-header">
-      <h1>
-        Roles
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route ('roles.index') }}"><i class="fa fa-dashboard"></i> Manage Roles</a></li>
-        <li class="active">Add role</li>
-      </ol>
-</section>
-
-<div class='col-lg-4 col-lg-offset-4'>
-
-    <h1><i class='fa fa-key'></i> Add Role</h1>
-    <hr>
-
-    {{ Form::open(array('url' => 'roles')) }}
-
-    <div class="form-group">
-        {{ Form::label('name', 'Name') }}
-        {{ Form::text('name', null, array('class' => 'form-control')) }}
+<div class="row">
+    <div class="col-lg-12 margin-tb">
+        <div class="pull-left">
+            <h2>Create New Role</h2>
+        </div>
+        <div class="pull-right">
+            <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
+        </div>
     </div>
-
-    <h5><b>Assign Permissions</b></h5>
-
-    <div class='form-group'>
-        @foreach ($permissions as $permission)
-            {{ Form::checkbox('permissions[]',  $permission->id ) }}
-            {{ Form::label($permission->name, ucfirst($permission->name)) }}<br>
-
-        @endforeach
-    </div>
-
-    {{ Form::submit('Add', array('class' => 'btn btn-primary')) }}
-
-    {{ Form::close() }}
-
 </div>
+
+
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+        <ul>
+        @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+        @endforeach
+        </ul>
+    </div>
+@endif
+
+
+{!! Form::open(array('route' => 'roles.store','method'=>'POST')) !!}
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="form-group">
+            <strong>Name:</strong>
+            {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="form-group">
+            <strong>Permission:</strong>
+            <br/>
+            @foreach($permission as $value)
+                <label>{{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name')) }}
+                {{ $value->name }}</label>
+            <br/>
+            @endforeach
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</div>
+{!! Form::close() !!}
+
 
 @endsection
