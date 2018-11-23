@@ -37,4 +37,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/manage/course/showLevel',['as'=>'showLevel','uses'=>'CourseController@showLevel']);
     Route::post('/manage/course/shift',['as'=>'createShift','uses'=>'CourseController@createShift']);
     Route::post('/manage/course/time',['as'=>'createTime','uses'=>'CourseController@createTime']);
+    Route::post('/manage/course/batch',['as'=>'createBatch','uses'=>'CourseController@createBatch']);
+    Route::post('/manage/course/group',['as'=>'createGroup','uses'=>'CourseController@createGroup']);
+    Route::post('/manage/course/class',['as'=>'createClass','uses'=>'CourseController@createClass']);
 });

@@ -11,6 +11,9 @@ use App\Academic;
 use App\Level;
 use App\Shift;
 use App\Time;
+use App\Batch;
+use App\Group;
+use App\MyClass;
 
 class CourseController extends Controller
 {
@@ -30,8 +33,11 @@ class CourseController extends Controller
     {
         $programs = Program::all();
         $shift =Shift::all();
+        $time=Time::all();
+        $batch=Batch::all();
+        $group=Group::all();
         $academics = Academic::orderBy('academic_id','DESC')->get();
-        return view('courses.manageCourse',compact('programs','academics','shift'));
+        return view('courses.manageCourse',compact('programs','academics','shift','time','batch','group'));
     }
 
     /**
@@ -118,8 +124,31 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function createBatch(Request $request)
     {
-        //
+        if($request->ajax())
+        {
+            return(Batch::create($request->all()));
+        }
+    }
+
+    //==============================================
+
+
+    public function createGroup(Request $request)
+    {
+        if($request->ajax())
+        {
+            return(Group::create($request->all()));
+        }
+    }
+    //==============================================
+
+    public function createClass(Request $request)
+    {
+        if($request->ajax())
+        {
+            return(MyClass::create($request->all()));
+        }
     }
 }

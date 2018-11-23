@@ -6,6 +6,8 @@
 @include('courses.popup.level')
 @include('courses.popup.shift')
 @include('courses.popup.time')
+@include('courses.popup.batch')
+@include('courses.popup.group')
 
 
 	<div class="row">
@@ -27,8 +29,9 @@
               <header class="panel-heading">
                 Manage Course
               </header>
+              <form action="{{ route('createClass') }}" class="form-horizontal " id="frm-create-class" method="POST">
               <div class="panel-body" style="border-bottom: 1px solid #ccc; ">
-                <form class="form-horizontal " id="frm-create-class">
+                <input type="hidden" name="active" id="active" value="1">
                 	<div class="panel panel-default">
                 		<div class="form-group">  
 
@@ -102,6 +105,7 @@
                 				<label for="shift">Shift</label>
                 				<div class="input-group">
                 					<select class="form-control" name="shift_id" id="shift_id">
+                                        <option value="">------Select------</option>
                 						@foreach($shift as $shf)
                                             <option value="{{ $shf->shift_id}}">{{ $shf->shift }}</option>
                                         @endforeach
@@ -120,6 +124,10 @@
                 				<label for="time">Time</label>
                 				<div class="input-group">
                 					<select class="form-control" name="time_id" id="time_id">
+                                        <option value="">------Select------</option>
+                                        @foreach($time as $tme)
+                                            <option value="{{ $tme->time_id}}">{{ $tme->time }}</option>
+                                        @endforeach
                 						
 
                 					</select>
@@ -137,11 +145,15 @@
                 				<label for="batch">Batch</label>
                 				<div class="input-group">
                 					<select class="form-control" name="batch_id" id="batch_id">
+                                        <option value="">------Select------</option>
+                                        @foreach($batch as $btch)
+                                            <option value="{{ $btch->batch_id}}">{{ $btch->batch }}</option>
+                                        @endforeach
                 						
 
                 					</select>
                 					<div class="input-group-addon">
-                						<span class="fa fa-plus"></span>
+                						<span class="fa fa-plus" id="add-more-batch"></span>
                 					</div>
                 				</div>
                 			</div>
@@ -150,17 +162,21 @@
 
 
                 			<div class="col-sm-2">
-                				<label for="group">Group</label>
-                				<div class="input-group">
-                					<select class="form-control" name="group_id" id="group_id">
-                						
+                				<label for="batch">Group</label>
+                                <div class="input-group">
+                                    <select class="form-control" name="group_id" id="group_id">
+                                        <option value="">------Select------</option>
+                                        @foreach($group as $grp)
+                                            <option value="{{ $grp->group_id}}">{{ $grp->group }}</option>
+                                        @endforeach
+                                        
 
-                					</select>
-                					<div class="input-group-addon">
-                						<span class="fa fa-plus"></span>
-                					</div>
-                				</div>
-                			</div>
+                                    </select>
+                                    <div class="input-group-addon">
+                                        <span class="fa fa-plus" id="add-more-group"></span>
+                                    </div>
+                                </div>
+                            </div>
 
 
                 				{{-----------------------------------------------}}
@@ -181,7 +197,7 @@
                 			<div class="col-sm-4">
                 				<label for="enddate">End Date</label>
                 				<div class="input-group">
-                					<input type="text" data-provide='datepicker' class="form-control" name="end_date" id="end_date">
+                					<input type="text" class="form-control" name="end_date" id="end_date">
                 					</input>
                 					<div class="input-group-addon">
                 						<span class="fa fa-calendar"></span>
@@ -197,8 +213,8 @@
                 	<div class="panel-footer">
                 		<button type="submit" class="btn btn-danger">Create Course</button>
                 	</div>
-                </form>
               </div>
+              </form>
             </section>
         </div>
 
@@ -211,10 +227,12 @@
        $('#start_date').datepicker({
             changeMonth:true,
             changeYear:true,
+            format: 'yyyy-mm-dd'
        });
        $('#end_date').datepicker({
             changeMonth:true,
             changeYear:true,
+            format: 'yyyy-mm-dd'
        });
        //===================================================
        $('#add-more-academic').on('click', function(){
@@ -230,6 +248,8 @@
                 }))
                 $('#new-academic').val("");
         });
+
+            $(this).trigger("reset");
        });
        //=====================================================
        $('#add-more-program').on('click', function(){
@@ -247,6 +267,8 @@
                     $('#program').val("");
                     $('#description').val("");
             });
+
+            $(this).trigger("reset");
         });
 
        $('#frm-create-class #program_id').on('change',function(e){
@@ -288,6 +310,8 @@
                     text :data.level
                 }))
             });
+
+            $(this).trigger("reset");
        })
        //==============================================================
        $('#add-more-shift').on('click',function(){
@@ -309,19 +333,68 @@
        $('#add-more-time').on('click',function(){
         $('#time-show').modal('show');
        });
+       
+
        //==============================================================
        $('#frm-time-create').on('submit',function(e){
-        e.preventDefault();
-        var data =$(this).serialize();
-        $.post("{{ route('createTime') }}", data,function(data){
+            e.preventDefault();
+            var data =$(this).serialize();
+            var time=$('#time_id');
+            $.post("{{ route('createTime') }}",data,function(data){
+                    $(shift).append($("<option/>",{
+                        value : data.time_id,
+                        text : data.time
+                    }));
+            });
+            $(this).trigger("reset");
+       });
+       //=============================================
 
+       $('#add-more-batch').on('click',function(){
+            $('#batch-show').modal('show');
+       });
 
-            $('#time_id').append($("<option/>",{
-                value : data.time_id,
-                text : data.time
-            }))
-        })
-        $(this).trigger('reset');
+       //==================================================
+       $('#frm-batch-create').on('submit',function(e){
+            e.preventDefault();
+            var data =$(this).serialize();
+            var batch=$('#batch_id');
+            $.post("{{ route('createBatch') }}",data,function(data){
+                    $(batch).append($("<option/>",{
+                        value : data.batch_id,
+                        text : data.batch
+                    }));
+            });
+            $(this).trigger("reset");
+       });
+       //=============================================
+
+       $('#add-more-group').on('click',function(){
+            $('#group-show').modal('show');
+       });
+
+       //==================================================
+       $('#frm-group-create').on('submit',function(e){
+            e.preventDefault();
+            var data =$(this).serialize();
+            var group=$('#group_id');
+            $.post("{{ route('createGroup') }}",data,function(data){
+                    $(group).append($("<option/>",{
+                        value : data.group_id,
+                        text : data.group
+                    }));
+            });
+            $(this).trigger("reset");
+       });
+       //=====================================================
+       $('#frm-create-class').on('submit',function(e){
+            e.preventDefault();
+            var data = $(this).serialize();
+            var url = $(this).attr('action');
+            $.post(url,data,function(data){
+                console.log(data);
+            })
+            $(this).trigger("reset");
        })
        
 	</script>
